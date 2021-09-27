@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spot-1
-  namespace: robot-test-1
+  #namespace: robot-test-1
 spec:
   replicas: 1
   selector:
