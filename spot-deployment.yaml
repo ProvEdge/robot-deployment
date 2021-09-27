@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spot-1
+  namespace: robot-test-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spot-1
+  template:
+    metadata:
+      labels:
+        app: spot-1
+    spec:
+      hostname: spot-1
+      containers:
+      - name: spot-1-webviz
+        image: hgtunc/boardmarker:webvizv2
+        env:
+        - name: WEBVIZ_PORT
+          value: "58602"
+        stdin: true
+        tty: true		  
+        ports:
+        - name: webviz
+          containerPort: 58602
+          hostport: 58602  
+          protocol: TCP
+        volumeMounts:
+      - name: spot-1
+        image: hgtunc/boardmarker:spotv2
+        env:
+        - name: VIDEO_PORT
+          value: "DFP"
+        - name: USER
+          value: "user"
+        - name: NEKO_BIND
+          value: "58002"
+        - name: NEKO_UDP_PORT
+          value: "59002-59002"
+        - name: THEIA_PORT
+          value: "58502"
+        - name: ROSBRIDGE_PORT
+          value: "58702"
+        stdin: true
+        tty: true		  
+        ports:
+        - name: http
+          containerPort: 58002
+          hostport: 58002
+          protocol: TCP
+        - name: spot-webrtc
+          containerPort: 59002
+          hostport: 59002
+          protocol: UDP
+        - name: spot-theia
+          containerPort: 58502
+          hostport: 58502  
+          protocol: TCP
+        - name: spot-rosbridge
+          containerPort: 58702
+          hostport: 58702  
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /cache
+          name: spot-xgl-cache-vol
+        - mountPath: /etc/bootstrap.sh
+          subPath: bootstrap.sh
+          name: robot-bootstrap
+        - mountPath: /etc/provedge/supervisord/theia_supervisord.conf
+          subPath: theia_supervisord.conf
+          name: robot-theia-supervisord
+        - mountPath: /etc/provedge/theia_start.sh
+          subPath: theia_start.sh
+          name: robot-theia-start
+        - mountPath: /etc/provedge/supervisord/spot_supervisord.conf
+          subPath: spot_supervisord.conf
+          name: spot-supervisord
+        - mountPath: /etc/provedge/spot_start.sh
+          subPath: spot_start.sh
+          name: spot-start
+        - mountPath: /var/www/js/app.08718670.js
+          subPath: app.08718670.js
+          name: robot-app-js
+        - mountPath: /var/www/index.html
+          subPath: index.html
+          name: robot-index		  
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      - name: spot-xgl-cache-vol
+        emptyDir: {}
+      - name: robot-bootstrap
+        configMap:
+          name: robot-bootstrap
+          defaultMode: 0777
+      - name: robot-theia-start
+        configMap:
+          name: robot-theia-start
+          defaultMode: 0777
+      - name: robot-theia-supervisord
+        configMap:
+          name: robot-theia-supervisord
+          defaultMode: 0777
+      - name: spot-start
+        configMap:
+          name: spot-start
+          defaultMode: 0777
+      - name: spot-supervisord
+        configMap:
+          name: spot-supervisord
+          defaultMode: 0777
+      - name: robot-app-js
+        configMap:
+          name: robot-app-js
+          defaultMode: 0777
+      - name: robot-index
+        configMap:
+          name: robot-index
+          defaultMode: 0777		  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spot-1
+  namespace: robot-test-1
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+  - port: 58002
+    targetPort: 58002
+    nodePort: 58002
+    protocol: TCP
+    name: http
+  - port: 58502
+    targetPort: 58502
+    nodePort: 58502
+    protocol: TCP
+    name: spot-theia
+  - port: 58602
+    targetPort: 58602
+    nodePort: 58602
+    protocol: TCP
+    name: spot-webviz
+  - port: 58702
+    targetPort: 58702
+    nodePort: 58702
+    protocol: TCP
+    name: spot-rosbridge
+  - port: 59002
+    targetPort: 59002
+    nodePort: 59002
+    protocol: UDP
+    name: spot-webrtc
+  selector:
+    app: spot-1	  
+  selector:
+    app: spot-1

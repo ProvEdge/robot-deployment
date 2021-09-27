@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jackal-1
+  namespace: robot-test-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jackal-1
+  template:
+    metadata:
+      labels:
+        app: jackal-1
+    spec:
+      hostname: jackal-1
+      containers:
+      - name: jackal-1-webviz
+        image: hgtunc/boardmarker:webvizv2
+        env:
+        - name: WEBVIZ_PORT
+          value: "58601"
+        stdin: true
+        tty: true		  
+        ports:
+        - name: webviz
+          containerPort: 58601
+          hostport: 58601  
+          protocol: TCP
+        volumeMounts:
+      - name: jackal-1
+        image: hgtunc/boardmarker:jackalv2
+        env:
+        - name: VIDEO_PORT
+          value: "DFP"
+        - name: USER
+          value: "user"
+        - name: NEKO_BIND
+          value: "58001"
+        - name: NEKO_UDP_PORT
+          value: "59001-59001"
+        - name: THEIA_PORT
+          value: "58501"
+        - name: ROSBRIDGE_PORT
+          value: "58701"
+        stdin: true
+        tty: true		  
+        ports:
+        - name: http
+          containerPort: 58001
+          hostport: 58001
+          protocol: TCP
+        - name: webrtc
+          containerPort: 59001
+          hostport: 59001  
+          protocol: UDP
+        - name: theia
+          containerPort: 58501
+          hostport: 58501  
+          protocol: TCP
+        - name: rosbridge
+          containerPort: 58701
+          hostport: 58701  
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /cache
+          name: xgl-cache-vol
+        - mountPath: /etc/bootstrap.sh
+          subPath: bootstrap.sh
+          name: robot-bootstrap
+        - mountPath: /etc/provedge/supervisord/theia_supervisord.conf
+          subPath: theia_supervisord.conf
+          name: robot-theia-supervisord
+        - mountPath: /etc/provedge/theia_start.sh
+          subPath: theia_start.sh
+          name: robot-theia-start
+        - mountPath: /etc/provedge/supervisord/jackal_supervisord.conf
+          subPath: jackal_supervisord.conf
+          name: jackal-supervisord
+        - mountPath: /etc/provedge/jackal_start.sh
+          subPath: jackal_start.sh
+          name: jackal-start
+        - mountPath: /var/www/js/app.08718670.js
+          subPath: app.08718670.js
+          name: robot-app-js
+        - mountPath: /var/www/index.html
+          subPath: index.html
+          name: robot-index
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      - name: xgl-cache-vol
+        emptyDir: {}
+      - name: robot-bootstrap
+        configMap:
+          name: robot-bootstrap
+          defaultMode: 0777
+      - name: robot-theia-start
+        configMap:
+          name: robot-theia-start
+          defaultMode: 0777
+      - name: robot-theia-supervisord
+        configMap:
+          name: robot-theia-supervisord
+          defaultMode: 0777
+      - name: jackal-start
+        configMap:
+          name: jackal-start
+          defaultMode: 0777
+      - name: jackal-supervisord
+        configMap:
+          name: jackal-supervisord
+          defaultMode: 0777
+      - name: robot-app-js
+        configMap:
+          name: robot-app-js
+          defaultMode: 0777
+      - name: robot-index
+        configMap:
+          name: robot-index
+          defaultMode: 0777
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jackal-1
+  namespace: robot-test-1
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+  - port: 58001
+    targetPort: 58001
+    nodePort: 58001
+    protocol: TCP
+    name: http
+  - port: 58501
+    targetPort: 58501
+    nodePort: 58501
+    protocol: TCP
+    name: theia
+  - port: 58601
+    targetPort: 58601
+    nodePort: 58601
+    protocol: TCP
+    name: webviz
+  - port: 58701
+    targetPort: 58701
+    nodePort: 58701
+    protocol: TCP
+    name: rosbridge
+  - port: 59001
+    targetPort: 59001
+    nodePort: 59001
+    protocol: UDP
+    name: webrtc
+  selector:
+    app: jackal-1	  
+  selector:
+    app: jackal-1	
