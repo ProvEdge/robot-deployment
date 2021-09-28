@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spot-1
+  #namespace: robot-test-1
+spec:
+  type: NodePort
+  externalTrafficPolicy: Local
+  ports:
+  - port: 58002
+    targetPort: 58002
+    nodePort: 58002
+    protocol: TCP
+    name: http
+  - port: 58502
+    targetPort: 58502
+    nodePort: 58502
+    protocol: TCP
+    name: spot-theia
+  - port: 58602
+    targetPort: 58602
+    nodePort: 58602
+    protocol: TCP
+    name: spot-webviz
+  - port: 58702
+    targetPort: 58702
+    nodePort: 58702
+    protocol: TCP
+    name: spot-rosbridge
+  - port: 59002
+    targetPort: 59002
+    nodePort: 59002
+    protocol: UDP
+    name: spot-webrtc
+  selector:
+    app: spot-1	  
+  selector:
+    app: spot-1
