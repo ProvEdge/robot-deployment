@@ -24,7 +24,7 @@ spec:
         ports:
         - name: webviz
           containerPort: 58601
-          hostport: 58601  
+          hostPort: 58601  
           protocol: TCP
         volumeMounts:
       - name: jackal-1
@@ -47,19 +47,19 @@ spec:
         ports:
         - name: http
           containerPort: 58001
-          hostport: 58001
+          hostPort: 58001
           protocol: TCP
         - name: webrtc
           containerPort: 59001
-          hostport: 59001  
+          hostPort: 59001  
           protocol: UDP
         - name: theia
           containerPort: 58501
-          hostport: 58501  
+          hostPort: 58501  
           protocol: TCP
         - name: rosbridge
           containerPort: 58701
-          hostport: 58701  
+          hostPort: 58701  
           protocol: TCP
         volumeMounts:
         - mountPath: /dev/shm
