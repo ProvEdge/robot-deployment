@@ -6,29 +6,29 @@ spec:
   type: NodePort
   externalTrafficPolicy: Local
   ports:
-  - port: 58001
-    targetPort: 58001
-    nodePort: 58001
+  - port: 31001
+    targetPort: 31001
+    nodePort: 31001
     protocol: TCP
     name: http
-  - port: 58501
-    targetPort: 58501
-    nodePort: 58501
+  - port: 31501
+    targetPort: 31501
+    nodePort: 31501
     protocol: TCP
     name: theia
-  - port: 58601
-    targetPort: 58601
-    nodePort: 58601
+  - port: 31601
+    targetPort: 31601
+    nodePort: 31601
     protocol: TCP
     name: webviz
-  - port: 58701
-    targetPort: 58701
-    nodePort: 58701
+  - port: 31701
+    targetPort: 31701
+    nodePort: 31701
     protocol: TCP
     name: rosbridge
-  - port: 59001
-    targetPort: 59001
-    nodePort: 59001
+  - port: 31001
+    targetPort: 31001
+    nodePort: 31001
     protocol: UDP
     name: webrtc
   selector:
