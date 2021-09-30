@@ -18,13 +18,13 @@ spec:
         image: hgtunc/boardmarker:webvizv2
         env:
         - name: WEBVIZ_PORT
-          value: "58601"
+          value: "31601"
         stdin: true
         tty: true		  
         ports:
         - name: webviz
-          containerPort: 58601
-          hostPort: 58601  
+          containerPort: 31601
+          hostport: 31601  
           protocol: TCP
         volumeMounts:
       - name: jackal-1
@@ -35,31 +35,31 @@ spec:
         - name: USER
           value: "user"
         - name: NEKO_BIND
-          value: "58001"
+          value: "31001"
         - name: NEKO_UDP_PORT
           value: "59001-59001"
         - name: THEIA_PORT
-          value: "58501"
+          value: "31501"
         - name: ROSBRIDGE_PORT
-          value: "58701"
+          value: "31701"
         stdin: true
         tty: true		  
         ports:
         - name: http
-          containerPort: 58001
-          hostPort: 58001
+          containerPort: 31001
+          hostport: 31001
           protocol: TCP
         - name: webrtc
-          containerPort: 59001
-          hostPort: 59001  
+          containerPort: 31002
+          hostport: 31002  
           protocol: UDP
         - name: theia
-          containerPort: 58501
-          hostPort: 58501  
+          containerPort: 31501
+          hostport: 31501  
           protocol: TCP
         - name: rosbridge
-          containerPort: 58701
-          hostPort: 58701  
+          containerPort: 31701
+          hostport: 31701  
           protocol: TCP
         volumeMounts:
         - mountPath: /dev/shm

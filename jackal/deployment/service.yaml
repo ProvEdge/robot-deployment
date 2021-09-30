@@ -26,9 +26,9 @@ spec:
     nodePort: 31701
     protocol: TCP
     name: rosbridge
-  - port: 31001
-    targetPort: 31001
-    nodePort: 31001
+  - port: 31002
+    targetPort: 31002
+    nodePort: 31002
     protocol: UDP
     name: webrtc
   selector:
